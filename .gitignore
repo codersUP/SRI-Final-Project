@@ -1,0 +1,5 @@
+Test Collections/
+venv/
+Pipfile
+Pipfile.lock
+.vscode/
