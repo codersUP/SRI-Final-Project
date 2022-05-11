@@ -1,8 +1,10 @@
 import json
 from pprint import pprint
 
+from src.parse_query import create_inverse_index_query
 from src.parse_directory import get_files_from_path_list
-from src.parse_document import get_importants_words, get_words_from_document
+from src.parse_document import create_index
+from src.vectorial_model import calculate_rank
 
 
 def main():
@@ -10,23 +12,16 @@ def main():
     json_files_path = json.load(f)
 
     files = get_files_from_path_list(json_files_path["paths"])
+    index, inverse_index = create_index(files[:10], verbose=True)
 
-    inverse_index = {}
-    for file in files:
-        print("processing file: ", file)
+    while True:
+        query = input("query: ")
 
-        words = get_importants_words(get_words_from_document(file))
-        for token in words:
-            word = token.lemma_.lower()
-            if word in inverse_index:
-                if file not in inverse_index[word]:
-                    inverse_index[word][file] = 0
-            else:
-                inverse_index[word] = {file: 0}
+        query_inverse_index = create_inverse_index_query(query)
 
-            inverse_index[word][file] += 1
+        result = calculate_rank(query_inverse_index, index, 3)
 
-        print(len(inverse_index.keys()))
+        pprint(result)
 
 
 if __name__ == "__main__":
