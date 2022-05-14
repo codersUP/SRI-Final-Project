@@ -9,7 +9,7 @@ def create_inverse_index_query(query):
         word = token.lemma_.lower()
 
         # adding to inverse_index
-        if word not in inverse_index:
+        if word not in inverse_index["terms"]:
             inverse_index["terms"][word] = 0
         inverse_index["terms"][word] += 1
 
