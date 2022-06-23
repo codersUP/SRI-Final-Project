@@ -12,9 +12,9 @@ def find_terms_in_query_and_document(query_terms, document_terms):
     return ret
 
 
-def rank_query_document(query_inverse_index, document_features):
-    query_len = query_inverse_index["len"]
-    query_terms = query_inverse_index["terms"]
+def rank_query_document(query_index, document_features):
+    query_len = query_index["len"]
+    query_terms = query_index["terms"]
 
     document_len = document_features["len"]
     document_terms = document_features["terms"]
@@ -37,14 +37,12 @@ def rank_query_document(query_inverse_index, document_features):
     return num / (dem_1 * dem_2)
 
 
-def calculate_rank(query_inverse_index, index, rank_N):
+def calculate_rank(query_index, index, rank_N):
     rank = []
 
     for document, document_features in index.items():
 
-        rank.append(
-            (rank_query_document(query_inverse_index, document_features), document)
-        )
+        rank.append((rank_query_document(query_index, document_features), document))
 
     rank.sort(reverse=True)
 
