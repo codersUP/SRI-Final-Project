@@ -5,4 +5,4 @@ install:
 	python -m spacy download en
 
 run:
-	streamlit run ui/main.py
+	streamlit run main.py
