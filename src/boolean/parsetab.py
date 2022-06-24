@@ -27,11 +27,11 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expr","S'",1,None,None,None),
-  ('expr -> expr AND expr','expr',3,'p_expr_and','query_parser.py',18),
-  ('expr -> expr OR expr','expr',3,'p_expr_or','query_parser.py',23),
-  ('expr -> term','expr',1,'p_expr_term','query_parser.py',27),
-  ('expr -> LPAREN expr RPAREN','expr',3,'p_expr_par','query_parser.py',31),
-  ('expr -> NOT term','expr',2,'p_expr_not','query_parser.py',35),
-  ('expr -> NOT LPAREN expr RPAREN','expr',4,'p_expr_not_par','query_parser.py',39),
-  ('term -> TERM','term',1,'p_term','query_parser.py',43),
+  ('expr -> expr AND expr','expr',3,'p_expr_and','query_parser.py',6),
+  ('expr -> expr OR expr','expr',3,'p_expr_or','query_parser.py',16),
+  ('expr -> term','expr',1,'p_expr_term','query_parser.py',26),
+  ('expr -> LPAREN expr RPAREN','expr',3,'p_expr_par','query_parser.py',36),
+  ('expr -> NOT term','expr',2,'p_expr_not','query_parser.py',46),
+  ('expr -> NOT LPAREN expr RPAREN','expr',4,'p_expr_not_par','query_parser.py',56),
+  ('term -> TERM','term',1,'p_term','query_parser.py',66),
 ]
