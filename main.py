@@ -6,7 +6,8 @@ from src.parse_directory import get_files_from_path_list
 from src.parse_document import create_index
 from src.vectorial_model import calculate_rank
 from src.utils import load_index_and_inverse_index, save_index_and_inverse_index
-from src.boolean.query_parser import get_documents
+from src.boolean.boolean_model import get_documents
+
 
 def main():
     f = open("files_path.json")
@@ -20,9 +21,9 @@ def main():
     )
 
     index, inverse_index = load_index_and_inverse_index("results.json")
-    
+
     while True:
-        #-----Vectorial-----------------
+        # -----Vectorial-----------------
         query = input("query: ")
 
         query_index = create_index_query(query)
@@ -31,15 +32,13 @@ def main():
 
         pprint(result)
 
-        #------Boolean------------------
+        # ------Boolean------------------
 
         query = input("boolean query: ")
 
-        result = get_documents(query,inverse_index,set(index.keys()))
+        result = get_documents(query, inverse_index, set(index.keys()))
 
         pprint(result)
-
-
 
 
 if __name__ == "__main__":
