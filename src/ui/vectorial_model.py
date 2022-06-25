@@ -1,7 +1,10 @@
 import streamlit as st
-
 from src.parse_query import create_index_query
 from src.vectorial_model import calculate_rank
+import pandas as pd
+import numpy as np
+
+from src.utils import filter_rank_value_greater_0
 
 
 def init_state():
@@ -26,5 +29,12 @@ def vectorialmodel():
         query_index = create_index_query(query)
 
         result = calculate_rank(query_index, index, 3)
+        filtered_result = filter_rank_value_greater_0(result)
 
-        st.text_area(label="resultado", value=result)
+        if len(filtered_result):
+            df = pd.DataFrame(np.array(filtered_result), columns=["value", "document"])
+
+            st.dataframe(df)
+
+        else:
+            st.header("no results for this query")
