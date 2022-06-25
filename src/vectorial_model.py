@@ -14,6 +14,8 @@ def find_terms_in_query_and_document(query_terms, document_terms):
 
 def rank_query_document(query_index, document_features):
     query_len = query_index["len"]
+    if query_len == 0:
+        return 0
     query_terms = query_index["terms"]
 
     document_len = document_features["len"]
