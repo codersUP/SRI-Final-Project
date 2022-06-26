@@ -52,14 +52,15 @@ def check_max_frequency(index, document, word):
 def create_tf(index, document):
     for term in index[document]["terms"].keys():
         index[document]["terms"][term]["tf"] = frequency(
-            index[document]["terms"][term]["count"], index[document]["max_freq"]
+            frequency(index[document]["terms"][term]["count"], index[document]["len"]),
+            index[document]["max_freq"],
         )
 
 
 def create_idf(inverse_index, N):
     for word in inverse_index.keys():
         inverse_index[word]["idf"] = math.log(
-            N / len(inverse_index[word]["documents"].keys())
+            N / len(inverse_index[word]["documents"].keys()), 10
         )
 
 
