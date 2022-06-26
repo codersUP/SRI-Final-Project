@@ -28,7 +28,7 @@ def vectorialmodel():
     if query != "":
         query_index = create_index_query(query)
 
-        result = calculate_rank(query_index, index, 3)
+        result = calculate_rank(query_index, index, 10)
         filtered_result = filter_rank_value_greater_0(result)
 
         if len(filtered_result):
