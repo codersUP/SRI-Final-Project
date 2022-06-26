@@ -13,30 +13,19 @@ def find_terms_in_query_and_document(query_terms, document_terms):
 
 
 def rank_query_document(query_index, document_features):
-    query_len = query_index["len"]
-    if query_len == 0:
+    if query_index["weight"] == 0 or document_features["weight"] == 0:
         return 0
-    query_terms = query_index["terms"]
 
-    document_len = document_features["len"]
+    query_terms = query_index["terms"]
     document_terms = document_features["terms"]
 
     common_terms = find_terms_in_query_and_document(query_terms, document_terms)
 
     num = 0
     for term in common_terms:
-        num += frequency(query_terms[term], query_len) * frequency(
-            document_terms[term], document_len
-        )
+        num += query_terms[term]["tf_idf"] * document_terms[term]["tf_idf"]
 
-    dem_1 = math.sqrt(
-        sum([frequency(value, query_len) ** 2 for value in query_terms.values()])
-    )
-    dem_2 = math.sqrt(
-        sum([frequency(value, query_len) ** 2 for value in document_terms.values()])
-    )
-
-    return num / (dem_1 * dem_2)
+    return num / (document_features["weight"] * query_index["weight"])
 
 
 def calculate_rank(query_index, index, rank_N):
