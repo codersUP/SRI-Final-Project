@@ -14,7 +14,7 @@ def get_documents(query, inverse_index, documents):
 def calculate_set(boolean_expression_dict, inverse_index, documents):
     if boolean_expression_dict["type"] == "TERM":
         try:
-            return set(inverse_index[boolean_expression_dict["word"]].keys())
+            return set(inverse_index[boolean_expression_dict["word"]]["documents"].keys())
         except KeyError:
             return set()
 
