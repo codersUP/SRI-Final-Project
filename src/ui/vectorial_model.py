@@ -1,7 +1,7 @@
 import streamlit as st
 from src.constants import A
-from src.parse_query import create_index_query
-from src.vectorial_model import calculate_rank
+from src.vectorial.parse_query import create_index_query
+from src.vectorial.vectorial_model import calculate_rank
 import pandas as pd
 import numpy as np
 

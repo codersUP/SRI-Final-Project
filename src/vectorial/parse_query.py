@@ -1,6 +1,6 @@
 import math
 from src.utils import frequency
-from src.parse_document import get_importants_words
+from src.vectorial.parse_document import get_importants_words
 
 
 def check_max_frequency(index, word):
