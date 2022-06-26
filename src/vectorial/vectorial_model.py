@@ -1,5 +1,4 @@
-import math
-from .utils import frequency
+from src.utils import frequency
 
 
 def find_terms_in_query_and_document(query_terms, document_terms):

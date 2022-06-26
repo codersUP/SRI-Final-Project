@@ -1,6 +1,6 @@
 import json
 import streamlit as st
-from src.parse_document import create_index_and_inverse_index
+from src.vectorial.parse_document import create_index_and_inverse_index
 from src.parse_directory import get_files_from_path_list
 from src.utils import load_index_and_inverse_index, save_index_and_inverse_index
 from src.ui.welcome import welcome

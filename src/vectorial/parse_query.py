@@ -1,6 +1,6 @@
 import math
 from src.utils import frequency
-from src.parse_document import get_importants_words
+from src.vectorial.parse_document import get_importants_words
 
 
 def check_max_frequency(index, word):
@@ -12,7 +12,7 @@ def check_max_frequency(index, word):
 def create_tf(index):
     for term in index["terms"].keys():
         index["terms"][term]["tf"] = frequency(
-            index["terms"][term]["count"], index["max_freq"]
+            frequency(index["terms"][term]["count"], index["len"]), index["max_freq"]
         )
 
 
