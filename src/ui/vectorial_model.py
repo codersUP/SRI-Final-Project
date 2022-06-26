@@ -1,4 +1,5 @@
 import streamlit as st
+from src.constants import A
 from src.parse_query import create_index_query
 from src.vectorial_model import calculate_rank
 import pandas as pd
@@ -26,7 +27,7 @@ def vectorialmodel():
     index, inverse_index = st.session_state.documents
 
     if query != "":
-        query_index = create_index_query(query)
+        query_index = create_index_query(query, A, inverse_index)
 
         result = calculate_rank(query_index, index, 10)
         filtered_result = filter_rank_value_greater_0(result)
