@@ -71,6 +71,14 @@ def create_tf_idf(index, inverse_index):
             )
 
 
+def create_weight_of_documents(index):
+    for document in index.keys():
+        sum = 0
+        for term in index[document]["terms"].keys():
+            sum += index[document]["terms"][term]["tf_idf"] ** 2
+        index[document]["weight"] = math.sqrt(sum)
+
+
 def create_index_and_inverse_index(documents, verbose=False):
     index = {}
     inverse_index = {}
@@ -103,5 +111,7 @@ def create_index_and_inverse_index(documents, verbose=False):
 
     create_idf(inverse_index, len(index.keys()))
     create_tf_idf(index, inverse_index)
+
+    create_weight_of_documents(index)
 
     return (index, inverse_index)
