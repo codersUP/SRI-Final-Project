@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 
 from src.utils import filter_rank_value_greater_0
+from src.vectorial.expand_query import expand_query, replace_expand_in_query
 
 
 def init_state():
@@ -39,3 +40,10 @@ def vectorialmodel():
 
         else:
             st.header("no existen resultados para esta consulta")
+
+        expanded = expand_query(query_index, inverse_index)
+        if len(expanded):
+            st.header("quizás quiso decir:")
+
+            expanded_query = replace_expand_in_query(query, expanded)
+            st.text(expanded_query)
