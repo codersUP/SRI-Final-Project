@@ -21,7 +21,7 @@ def vectorialmodel():
         init_state()
 
     st.subheader("Introduzca la consulta")
-    query = st.text_input("query")
+    query = st.text_input("consulta")
 
     index, inverse_index = st.session_state.documents
 
@@ -37,4 +37,4 @@ def vectorialmodel():
             st.dataframe(df)
 
         else:
-            st.header("no results for this query")
+            st.header("no existen resultados para esta consulta")
