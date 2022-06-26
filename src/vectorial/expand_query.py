@@ -1,5 +1,4 @@
 from fuzzywuzzy import process
-
 from src.vectorial.parse_document import get_importants_words
 
 
@@ -19,8 +18,6 @@ def replace_expand_in_query(query, expanded):
     query_splited = query.split()
 
     words = get_importants_words(query)
-
-    result = []
 
     for token in words:
         word = token.lemma_.lower()
