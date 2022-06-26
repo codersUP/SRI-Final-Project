@@ -1,7 +1,10 @@
 import streamlit as st
-
 from src.parse_query import create_index_query
 from src.vectorial_model import calculate_rank
+import pandas as pd
+import numpy as np
+
+from src.utils import filter_rank_value_greater_0
 
 
 def init_state():
@@ -18,13 +21,20 @@ def vectorialmodel():
         init_state()
 
     st.subheader("Introduzca la consulta")
-    query = st.text_input("query")
+    query = st.text_input("consulta")
 
     index, inverse_index = st.session_state.documents
 
     if query != "":
         query_index = create_index_query(query)
 
-        result = calculate_rank(query_index, index, 3)
+        result = calculate_rank(query_index, index, 10)
+        filtered_result = filter_rank_value_greater_0(result)
 
-        st.text_area(label="resultado", value=result)
+        if len(filtered_result):
+            df = pd.DataFrame(np.array(filtered_result), columns=["value", "document"])
+
+            st.dataframe(df)
+
+        else:
+            st.header("no existen resultados para esta consulta")

@@ -20,7 +20,7 @@ def callback():
         json_files_path = json.load(f)
 
         files = get_files_from_path_list(json_files_path["paths"])
-        index, inverse_index = create_index(files[:10], verbose=True)
+        index, inverse_index = create_index(files, verbose=True)
 
         save_index_and_inverse_index(
             "results.json", index=index, inverse_index=inverse_index
