@@ -18,8 +18,8 @@ tokens = (
 
 # Regular expression rules for simple tokens
 
-t_LPAREN = r"\("
-t_RPAREN = r"\)"
+t_LPAREN = r"\["
+t_RPAREN = r"\]"
 
 # A regular expression rule with some action code
 # Note addition of self parameter since we're in a class
@@ -27,7 +27,7 @@ t_RPAREN = r"\)"
 #  digit            = r'([0-9])'
 #  nondigit         = r'([_A-Za-z])'
 def t_TERM(t):
-    r"[a-zA-Z0-9]+"
+    r"[a-zA-Z0-9_.,?!'/\(\)-]+"
     t.type = reserved.get(t.value, "TERM")
     t.value = en(t.value)[0].lemma_ if t.type == "TERM" else t.value
     return t
