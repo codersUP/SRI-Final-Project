@@ -89,7 +89,7 @@ def vectorial_evaluations(query, A, index, inverse_index, rank_amount):
 def boolean_evaluation(query, index, inverse_index, rank_amount):
     query_to_low = query.lower()
     query_single_space = " ".join(query_to_low.split())
-    query_fixed = query_single_space.replace("\n", "").replace(" ", " AND ")
+    query_fixed = query_single_space.replace("\n", "").replace(" ", " OR ")
 
     result = list(get_documents(query_fixed, inverse_index, set(index.keys())))
 
