@@ -65,10 +65,17 @@ Para la representación de las consultas en el modelo booleano se ha creado un {
   word = r"[a-zA-Z0-9_.,?!'/\(\)-]+"
 \end{verbatim}
 
-El lexer, divide en tokens la consulta y desecha aquellos caracteres que no se consideran necesarios. Al mismo tiempo apoyándose en la biblioteca {\bfseries Spacy}, se le aplica la función {\bfseries lemmatise} a cada término, de la misma forma que se le realizó a los documentos, para llevar las palabras a su forma original. El resultado de la {\bfseries Parser} es un {\bfseries AST} modificado, que posee toda la información valiosa de la consulta. Sobre este árbol se realiza un recorrido de todos los nodos siguiendo un patrón {\bfseries Visitor} creando el conjunto solución a la consulta utilizando para esto el índice invertido anteriormente creado. Este conjunto de solución a la consulta es el resultado de ir realizando interesecciones, uniones y diferencias de diferentes conjuntos de documentos durante el recorrido del árbol, cada operación de conjunto aplicada depende de la operación contenida en el nodo visitado. Finalmente el nodo raiz del {\bfseries AST} contiene todos los documentos que cumplen con las condiciones presentadas en forma de consulta por el usuario.
+El lexer, divide en tokens la consulta y desecha aquellos caracteres que no se consideran necesarios. Al mismo tiempo apoyándose en la biblioteca {\bfseries Spacy}, se le aplica la función {\bfseries lemmatise} a cada término, de la misma forma que se le realizó a los documentos, para llevar las palabras a su forma original. El resultado del {\bfseries Parser} es un {\bfseries AST} modificado, que posee toda la información valiosa de la consulta.
 
 \subsubsection{Modelo Vectorial}\
 
-asdfadsf
+En el modelo vectorial lo primero que se realiza es la tokenización de los términos de la misma forma que se realizó con los documentos en un inicio,
+esto se hace con el objetivo de poder utilizar la función {\bfseries lemmatise} de la biblioteca {\bfseries Spacy}. Luego se crea un índice para la consulta, en donde se guarda por cada término la frecuencia con la que este aparece en la interrogante del usuario. Además se aprobecha este momento para realizar cómputo sobre los términos que será utilizado próximamente en la recuperación de documentos del modelo.
+
+\subsection{Framework}
+
+\subsubsection{Modelo Booleano}\
+
+Sobre este árbol se realiza un recorrido de todos los nodos siguiendo un patrón {\bfseries Visitor} creando el conjunto solución a la consulta utilizando para esto el índice invertido anteriormente creado. Este conjunto de solución a la consulta es el resultado de ir realizando interesecciones, uniones y diferencias de diferentes conjuntos de documentos durante el recorrido del árbol, cada operación de conjunto aplicada depende de la operación contenida en el nodo visitado. Finalmente el nodo raiz del {\bfseries AST} contiene todos los documentos que cumplen con las condiciones presentadas en forma de consulta por el usuario.
 
 \end{document}
