@@ -1,0 +1,74 @@
+\documentclass{llncs}
+
+\usepackage{llncsdoc}
+
+%
+\title{Proyecto de Sistemas de Recuperación de Información}
+
+\author{Enrique Martínez González \and Carmen Irene Cabrera Rodríguez \and Osmany Pérez Rodríguez}
+\institute{C512}
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    La localización de materiales de naturaleza no estructurada para satisfacer una necesidad de información en una larga colección almacenada es una actividad cada día más importante. Con el fin de lograr este objetivo se ha desarrollado un sistema de recuperación de información basándose en la utilización de los modelos vectorial y booleano capaces de encontrar documentos interrelacionados con una consulta planteada mediante una interfaz visual web. Se ha desarrollado de igual forma un mecanismo para poder expandir la consulta permitiendo apreciar posibles modificaciones de esta con el objetivo de tener una mayor efectividad en la búsqueda de información. Finalmente se aprecian las comparativas de los modelos implementados probados en dos sets de datos distintos.
+\end{abstract}
+
+\keywords{Sistema de Recuperación de Información, modelo vectorial, modelo booleano, consulta expandida}
+
+
+\newpage
+\tableofcontents
+\newpage
+
+
+\section{Introducción}
+En la actualidad, dado el auge que ha tenido el Internet, existe una enorme disponibilidad de información en línea y documentos, que resulta abrumadora para los usuarios. De ahí que sea interés de muchos investigadores desarrollar una herramienta automática que permita la obtención de información relevante a una consulta determinada. Esta consulta debe ser resuelta rápidamente obteniendo documentos útiles acerca del tema solicitado.
+
+Esta resulta una tarea no trivial y difícil de llevar a cabo; pues, mientras las personas pueden leer un documento para comprenderlo y ver acerca de qué contenido trata y luego decidir si es relevante a la consulta; la computadora carece de conocimiento humano y de la capacidad del lenguaje.
+
+Las primeras incursiones en esta área, datan de mitades del siglo XX, comenzando con estudios utilizando como set de datos la colección Cranfield, utilizando un gran número de técnicas distintas cuyo rendimiento fue bueno. Desde entonces, muchos trabajos han sido publicados para abordar este problema, pudiendo observar un aumento significativo de las investigaciones sobre el tema a partir de 1992. Son numerosos los enfoques que se han llevado a cabo y que son aplicados ampliamente en
+varios dominios. El presente trabajo tiene como propósito tratar los enfoques planteados en el modelo booleano y el modelo vectorial para la obtención de documentos relevantes, además de plantear un algorítmo de expansión de consulta.
+
+\section{Modelo de Recuperación de Información}
+
+Se puede definir un modelo de recuperación de información como una cuádrupla en donde se tiene un conjunto de representaciones lógicas de los documento de la colección al que llamaremos D, un conjunto de las representaciones lógicas de la consulta realizada por el usuario al que llamaremos Q, para modelar las representaciones de los documentos y las consultas, y sus relaciones se utiliza un framework que llamaremos F y finalmente una función que es capaz de ordenar de alguna manera los documentos pertencientes a D relevantes ante la consulta Q, esta función posee el nombre de ranking a la que llamaremos R.
+
+\subsection{Representación de documentos}
+
+Para la realización de este proyecto se han utilizado 3 conjuntos de documentos, dos de ellos para la evaluación de la calidad de los modelos, y el tercero para la elavoración de una herramienta visual que permite al usuario realizar consultas para probar de forma interactiva la herramienta desarrollada. Los dos conjuntos de documentos utilizados para la evaluación poseen el nombre de {\bfseries Cranfield} y {\bfseries Vaswani}, estos poseen 1400 y 11000 documentos respectivamente, ambos con temática de resúmenes científicos.
+
+La representación de estos documentos es obtenida mediante un proceso de construcción de índices y de índices inversos. En el índice se almacena la información de los términos que aparecen en cada documento, y la frecuencia con la que aparece, además de aprobechar este mismo cómputo para calcular múltiples valores que serán posteriormente utilizados en el modelo vectorial, este cómputo adelantado permitirá la obtención de documentos relevantes a consultas de manera más rápidas, los detalles se explicarán posteriormente en el artículo. En el índice inverso se almacena por cada término perteneciente al conjunto, en qué documentos este aparece. Resaltar que los terminos utilizados en estos dos cómputos no son todas las palabras que aparecen en los documentos, estas palabras se filtran utilizando la biblioteca {\bfseries Spacy} para tokenizar el documento y después eliminar aquellos tokens que no son de importancia para el procesamiento: signos de puntuación, de monedas, dígitos, espacios, stopwords, y luego transformadas a su forma base utilizando la funcionalidad {\bfseries lemmatise} que posee esta biblioteca.
+
+Con estas representaciones se está comprimiendo un conjunto de documentos en dos diccionarios de {\bfseries Python} que nos permite la rápida inserción y extracción de información acerca de documentos y terminos presentes en el sistema.
+
+\subsection{Representación de consultas}
+
+Los dos conjuntos de documentos planteados anteriormente que fueron utilizados para la evaluación de la calidad de los modelos implementados poseen un conjunto de consultas y para cada una de estas poseen los documentos que son relevantes y su valor de relevancia está determinado por un valor que va de -1 hasta 4, siendo -1 el valor para un documento que no posee mucha relevancia con la consulta y siendo 4 el valor que poseen los documentos con más valor para la necesidad del usuario. {\bfseries Cranfield} posee 225 consultas con un total de 1800 documentos relevantes en total mientras que {\bfseries Vaswani} tiene 93 consultas para un total de 2100 documentos relevantes. Resaltar que estas consultas no están orientadas al modelo booleano ya que no están expresadas mediante el uso de una expresión booleana sobre los términos utilizando las operaciones clásicas como, {\bfseries OR}, {\bfseries AND} y {\bfseries NOT}. Para la comparación de modelos se modificó estos sets de consultas en la evaluación del modelo booleano, susituyendo los espacios entre términos por operadores {\bfseries OR}.
+
+\subsubsection{Modelo Booleano}\
+
+Para la representación de las consultas en el modelo booleano se ha creado un {\bfseries Lexer} y un {\bfseries Parser} utilizando la biblioteca {\bfseries Ply} permitiendo así implementar una gramática para poder leer consultas que son expresiones booleanas con las operaciones definidas anteriormente, para el agrupamiento dentro de la expresión, cumpliendo con la propiedad asociativa y distributiva que poseen las expresiones booleanas se han empleado los signos de corchetes {\bfseries []}. La gramática empleada posee las siguientes reglas:
+
+\begin{verbatim}
+  Expr : Expr AND Expr 
+  Expr : Expr OR Expr 
+  Expr : [ Expr ]
+  Expr : NOT Expr
+  Expr : Term
+  Term : word
+
+  word = r"[a-zA-Z0-9_.,?!'/\(\)-]+"
+\end{verbatim}
+
+El lexer, divide en tokens la consulta y desecha aquellos caracteres que no se consideran necesarios. Al mismo tiempo apoyándose en la biblioteca {\bfseries Spacy}, se le aplica la función {\bfseries lemmatise} a cada término, de la misma forma que se le realizó a los documentos, para llevar las palabras a su forma original. El resultado de la {\bfseries Parser} es un {\bfseries AST} modificado, que posee toda la información valiosa de la consulta. Sobre este árbol se realiza un recorrido de todos los nodos siguiendo un patrón {\bfseries Visitor} creando el conjunto solución a la consulta utilizando para esto el índice invertido anteriormente creado. Este conjunto de solución a la consulta es el resultado de ir realizando interesecciones, uniones y diferencias de diferentes conjuntos de documentos durante el recorrido del árbol, cada operación de conjunto aplicada depende de la operación contenida en el nodo visitado. Finalmente el nodo raiz del {\bfseries AST} contiene todos los documentos que cumplen con las condiciones presentadas en forma de consulta por el usuario.
+
+\subsubsection{Modelo Vectorial}\
+
+asdfadsf
+
+\end{document}
