@@ -155,10 +155,26 @@ Resaltar que la forma de obtención de estas fue promediar las medidas en cada u
 
 \section{Aplicación visual}
 
+Además de la evaluación de los modelos se ha desarrollado una aplicación visual utilizando la biblioteca {\bfseries Streamlit}, para permitir que un usuario pueda experimentar con estos modelos libremente. En esta aplicación se utiliza como set de datos un conjunto de documentos acerca de atletismo. Al ejecutar la aplicación por primera vez se comenzará a ejecutar todo el precómputo sobre los documentos mencionado previamente en este informe. Los resultados se muestran en una tabla, en la que se muestran la similitud de los documentos con la consulta en el modelo vectorial, y en el booleano solo se muestran los documentos que fueron seleccionados por los algorítmos planteados en el informe.
+
 \section{Consulta expandida}
+
+En la aplicación visual, específicamente en el modelo vectorial se puede apreciar que si en la consulta algún término no aparece en los documentos se hará una recomendación de consulta con otros terminos que si se encuentran dentro del set de datos. Esta recomendación es realizada mediante la distancia Levenshtein entre el término de la consulta y los términos en los documentos. Luego se ordenan estas distancias y se sustituye en la consulta el término con menor valor de este cómputo. Para esto se utilizó la biblioteca {\bfseries Fuzzywuzzy}. Específicamente la fórmula para calcular la distancia entre los términos $a$ y $b$ que esta biblioteca utiliza es:
+
+\begin{equation}
+    dist(a, b) = \frac{len(a) + len(b) - LevenshteinDistance(a, b)}{len(a) + len(b)}
+\end{equation}
+
+En donde $len$ es una función que retorna la longitud de la palabra.
 
 \section{Detalles de implementación}
 
+Toda la realización del proyecto fue utilizando el lenguaje de programación {\bfseries Python}, manteniendo un archivo con el nombre de {\bfseries requirements.txt} en donde se encuentran todas las bibliotecas utilizadas. Se desarrolló un {\bfseries makefile} para la fácil instalación y ejecución de la apliación visual por parte del usuario.
+
 \section{Conclusiones}
+
+En la sociedad actual, con el predominio de los teléfonos inteligentes y las redes sociales, el impacto que tiene la información en numerosos ámbitos de la vida, se mide en segundos y mientras, la cantidad de información existente está más allá de lo que cualquier individuo puede digerir. Es por ello que resulta imperativo el desarrollo de modelos automáticos que permitan recolectar y recuperar información relacionada a consultas. Para la realización de esta tarea se trataron dos modelos empleados en los sistemas de recuperación: vectorial y booleano; se implementaron y evaluaron respecto a las principales variables de comparación, apreciando así que los resultados obtenidos de la aplicación de estos no es muy buena, por esta razón es que los modelos usados en la actualidad son modificaciones y mezclas de estos modelos bases.
+
+Además se elavoró una interfaz visual para el fácil uso por parte del usuario de estos sobre un set de datos y se desarrollo un algorítmo de expansión de consulta para ayudar al usuario a la hora de realizar una consulta.
 
 \end{document}
