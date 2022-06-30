@@ -24,7 +24,7 @@ Se le brindará la posibilidad al usuario de escribir tantas consultas como dese
 
 ### Ideas principales de implementación
 
-El Modelo de Recuperación de Información que se llevó a cabo fue el modelo vectorial. Este modelo permite otorgar un ranking a cada documento de acuerdo con su grado de similitud a la consulta realizada.
+Los Modelos de Recuperación de Información que se imlementaron fueron el modelo vectorial y el modelo booleano. El modelo vectorial permite otorgar un ranking a cada documento de acuerdo con su grado de similitud a la consulta realizada y el booleano solo retorna los documentos que coinciden con las características de la consulta.
 
 En primer lugar se llevó a cabo un preprocesamiento de las palabras presentes en los documentos del set de datos, utilizando la biblioteca **spacy**. Esta transforma las palabras del texto en _tokens_; brinda facilidades para eliminar stopwords, tales como : símbolos de puntuación, números, conjunciones, preposiciones y otras. Luego se aplica _lemmatize_, proceso lingüístico para hallar la forma básica (el lema) de una palabra. Esto favorece la generación de un diccionario que contiene,por cada documento, la cantidad total de tokens por la que está compuesto y por cada token, su frecuencia en dicho documento; lo que permitirá más tarde, el cálculo del ranking de cada uno.
 
@@ -32,15 +32,11 @@ Después del análisis de los documentos, se realiza un análisis similar por ca
 
     $sim(d_j, q) = \frac{\sum_{i = 1}^{n} w_{i, j} \times w_{iq}}{\sqrt{\sum_{i = 1}^{n} w_{i, j}^2} \times \sqrt{\sum_{i = 1}^{n} w_{iq}^2}}$
 
-donde:
-
-- $sim(d_j, q)$ define la similitud entre el j-ésimo documento y la consulta dada
-- $w_{i, j}$ define la frecuencia del token i-ésimo en el j-ésimo documento
-- $w_{iq}$ define la frecuencia del token i-ésimo en la consulta.
+la definición de estos pesos se encuentra dentro del informe.
 
 Tras este cálculo de ranking se ordenan los documentos de forma decreciente según su puntuación y se retornan al usuario en ese orden, ya sea todos los documentos o una cantidad predeterminada de ellos.
 
-En particular, actualmente no se realiza este proceso por todos los documentos, sino por un subconjunto que está definido en `files_path.json`, puesto que el código implementado carece de optimizaciones por lo que el análisis de todos los documentos del juego de datos tomaría demasiado tiempo. De ellos solo se muestran al usuario los 3 documentos más relevantes.
+En particular, actualmente no se realiza este proceso por todos los documentos, sino por un subconjunto que está definido en `files_path.json`, dado que el análisis de todos los documentos del juego de datos tomaría demasiado tiempo.
 
 ## Integrantes:
 
