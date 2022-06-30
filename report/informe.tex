@@ -115,4 +115,50 @@ Se pudiese definir el peso total de un documento o consulta como la raiz de la s
 
 Luego queda hallar los términos en común entre la consulta y el documento para encontrar el numerador del cálculo del coseno y ya obtendriamos el valor de la similitud entre un documento y una consulta. Mientras mayor valor de similitud, mayor relevancia del documento ante la consulta.
 
+\section{Resultados}
+
+Para la evaluación de la calidad de los modelos se emplearon las consultas pertenecientes a cada juego de datos, recordemos que estos juegos de datos son Cranfield y Vaswani. Se midieron sobre los modelos los valores de precisión que es la cantidad de documentos relevantes recuperados sobre el total de documentos recuperados, el recobrado que es la cantidad de documentos relevantes recuperados sobre la cantidad total de documentos relevantes en el conjunto de datos. Además se evaluaron las medidas $F$ con un valor de beta igual a $0.5$ y $F_1$. Se utilizaron 3 cantidad de documentos recuperados distintas por cada evaluación, siendo estas $10$, $50$ y $100$. A continuación se muestran las distintas medidas obtenidas para los dos modelos en los sets de datos tomando 100 documentos recuperados en cada consulta:
+
+\begin{table}
+    \begin{center}
+        \caption{Evaluaciones de variables con límite de 100 documentos recuperados en Cranfield}
+        \begin{tabular}{lllll}
+            \hline\noalign{\smallskip}
+            Modelo    & Precisión & Recobrado & F     & $F_1$ \\
+            \noalign{\smallskip}
+            \hline
+            \noalign{\smallskip}
+            Vectorial & 0.005     & 0.056     & 0.006 & 0.010 \\
+            Booleano  & 0.004     & 0.060     & 0.004 & 0.007 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{table}
+    \begin{center}
+        \caption{Evaluaciones de variables con límite de 100 documentos recuperados en Vaswani}
+        \begin{tabular}{lllll}
+            \hline\noalign{\smallskip}
+            Modelo    & Precisión & Recobrado & F     & $F_1$ \\
+            \noalign{\smallskip}
+            \hline
+            \noalign{\smallskip}
+            Vectorial & 0.091     & 0.439     & 0.104 & 0.138 \\
+            Booleano  & 0.010     & 0.043     & 0.011 & 0.014 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Resaltar que la forma de obtención de estas fue promediar las medidas en cada una de las consultas en los sets probados. Como se puede apreciar en el conjunto de datos Vaswani se obtienen mejores resultados para los dos modelos, en el caso del modelo vectorial se obtiene una precisión del 9\% y en caso del booleano 1\%, recordar que las consultas en este set de datos no estaban preparadas para ser usadas en un modelo con operaciones booleanas. Pero sin dudas se puede apreciar como la aplicación de estos modelos no da buenos resultados.
+
+\section{Aplicación visual}
+
+\section{Consulta expandida}
+
+\section{Detalles de implementación}
+
+\section{Conclusiones}
+
 \end{document}
