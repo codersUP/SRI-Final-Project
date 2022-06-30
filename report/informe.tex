@@ -72,10 +72,47 @@ El lexer, divide en tokens la consulta y desecha aquellos caracteres que no se c
 En el modelo vectorial lo primero que se realiza es la tokenización de los términos de la misma forma que se realizó con los documentos en un inicio,
 esto se hace con el objetivo de poder utilizar la función {\bfseries lemmatise} de la biblioteca {\bfseries Spacy}. Luego se crea un índice para la consulta, en donde se guarda por cada término la frecuencia con la que este aparece en la interrogante del usuario. Además se aprobecha este momento para realizar cómputo sobre los términos que será utilizado próximamente en la recuperación de documentos del modelo.
 
-\subsection{Framework}
+\subsection{Framework}\
+
+Para la representación de los documentos se utilizaron los diccionarios de {\bfseries Python}, estos permiten la representación de los términos como un conjunto, y se puede almacenar información como su frecuencia. Además permite la rápida recuperación de estos.
+
+Para la representación de las consultas se emplearon técnicas distintas dependiendo del modelo, en caso del modelo booleano se utilizó un árbol de sintaxis abstracta representado mediante diccionarios de {\bfseries Python}, en los que se almacenaban los hijos de cada nodo y la operación que representaba. En caso del modelo vectorial la consulta se representa mediante un diccionario al igual que los documentos en los que se guarda la frecuencia de cada término dentro de la consulta y otras informaciones que serán explicadas posteriormente.
+
+\subsection{Ranking}
+El cómputo que se hizo en la etapa del análisis de los documentos y la consulta es de vital importancia para el rápido desarrollo del cálculo de la interrelación entre estos. En el caso de los documentos se calcula para cada térmio el valor de la frecuencia de un término en el documento, y además se calcula la frecuencia normalizada del término $i$ en el documento $j$ que esta es:
+
+\begin{equation}
+    tf_{i, j} = \frac{freq_{i, j}}{max_l freq_{l, j}}
+\end{equation}
+
+Como se puede ver, ninguno de los factores en la definición está fuera del conjunto de documentos analizados, por lo que se cálculo se puede desarrollar en esta fase de precómputo. Igualmente sucede con la frecuencia de ocurrencia de un término dentro de todos los documentos de la colección ({\bfseries $idf$}). Con estos dos valores mencionados, $tf$ e $idf$, podemos calcular el peso del término $i$ en el documento $j$ ya que este es:
+
+\begin{equation}
+    w_{i, j} = tf_{i, j} * idf_{i}
+\end{equation}
+
+Este peso será utilizado en el modelo vectorial. Igualmente se puede realizar cómputo sobre la consulta en cuanto es recibida, calculando el valor del peso del término $i$ en la consulta $q$ con esta con la ecuación:
+
+\begin{equation}
+    w_{i, q} = (a + (1 - a) * \frac{freq_{i, q}}{max_l freq_{l, q}}) * log \frac{N}{n_i}
+\end{equation}
+
+$N$ es el total de documentos en la colección y $a$ es el término de suavizado, en la evaluación obtenida se utilizó $a$ con un valor de $0.5$.
 
 \subsubsection{Modelo Booleano}\
 
-Sobre este árbol se realiza un recorrido de todos los nodos siguiendo un patrón {\bfseries Visitor} creando el conjunto solución a la consulta utilizando para esto el índice invertido anteriormente creado. Este conjunto de solución a la consulta es el resultado de ir realizando interesecciones, uniones y diferencias de diferentes conjuntos de documentos durante el recorrido del árbol, cada operación de conjunto aplicada depende de la operación contenida en el nodo visitado. Finalmente el nodo raiz del {\bfseries AST} contiene todos los documentos que cumplen con las condiciones presentadas en forma de consulta por el usuario.
+Recordemos que el resultado de la representación de la consulta en este modelo es un {\bfseries AST}, por lo que sobre este árbol se realiza un recorrido de todos los nodos siguiendo un patrón {\bfseries Visitor} creando el conjunto solución a la consulta utilizando para esto el índice invertido de términos creado. Este conjunto de solución a la consulta es el resultado de ir realizando interesecciones, uniones y diferencias de diferentes conjuntos de documentos durante el recorrido del árbol, cada operación de conjunto aplicada depende de la operación contenida en el nodo visitado, detallar que las hojas del árbol representan los términos de la consulta y son nodos que poseen los conjuntos de documentos en los que aparece este término. Finalmente el nodo raiz del {\bfseries AST} contiene todos los documentos que cumplen con las condiciones presentadas en forma de consulta por el usuario. En caso de este modelo no existe superioridad de un documento relevante sobre otro relevante, sencillamente la relación de relevancia es binaria.
+
+\subsubsection{Modelo Vectorial}\
+
+Es en este modelo donde vamos a hacer uso de todo el precálculo que se hizo sobre los documentos y la consulta, pues aquí la similitud de un documento y una interrogante está dada por el coseno del ángulo entre el vector documento y el vector consulta. Estos vectores están definidos sobre el espacio vectorial de n dimensiones en donde n es la cantidad de términos que se encuentran presentes en todo el sistema. Las componentes de cada vector son binarias, siendo 1 si el término del sistema representado por esa componente se encuentra en el documento o consulta analizado, o siendo 0 en caso contrario. El coseno entre el vector representante del documento $j$ y la consulta $q$ se calcula de la forma:
+
+\begin{equation}
+    sim(d_j, q) = \frac{\sum_{i = 1}^n w_{i, j} * w_{i, q}}{\sqrt{\sum_{i = 1}^n w^2_{i, j}} + \sqrt{\sum_{i = 1}^n w^2_{i, q}}}
+\end{equation}
+
+Se pudiese definir el peso total de un documento o consulta como la raiz de la sumatoria del cuadrado de los pesos de todos los términos en un documento o consulta, como vemos estos se pueden calcular en la etapa de preprocesamiento de los documentos y la consulta respectivamente, estos cálculos fueron también realizados en estas etapas para agilizar la velocidad de la recuperación de los documentos relevantes.
+
+Luego queda hallar los términos en común entre la consulta y el documento para encontrar el numerador del cálculo del coseno y ya obtendriamos el valor de la similitud entre un documento y una consulta. Mientras mayor valor de similitud, mayor relevancia del documento ante la consulta.
 
 \end{document}
