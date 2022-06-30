@@ -27,9 +27,10 @@ def booleanmodel():
         result = get_documents(query, inverse_index, set(index.keys()))
 
         if len(result):
-            df = pd.DataFrame(np.array(result), columns=["document"])
+            df = pd.DataFrame(np.array(list(result)), columns=["document"])
 
             st.dataframe(df)
+            
 
         else:
             st.header("no existen resultados para esta consulta")
